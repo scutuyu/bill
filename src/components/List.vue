@@ -68,7 +68,7 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-pagination @current-change="handleCurrentChange" background layout="prev, pager, next" :total="1000"></el-pagination>
+    <el-pagination @current-change="handleCurrentChange" background layout="prev, pager, next" :total="total"></el-pagination>
   </div>
 </template>
 
@@ -92,6 +92,9 @@ export default {
   computed: {
     tableData: function() {
       return this.$store.state.bills;
+    },
+    total: function(){
+      return this.$store.state.total;
     }
   },
   mounted: function() {
@@ -106,8 +109,8 @@ export default {
       let params = {
         start_date: formatDate(this.dateSection[0]),
         end_date: formatDate(this.dateSection[1]),
-        pageNum,
-        pageSize
+        page_num: pageNum,
+        page_size: pageSize
       }
       console.log(this.dateSection);
       
@@ -115,7 +118,8 @@ export default {
       if (response.data.code != "0") {
         this.$message.error(response.data.message);
       } else {
-        this.$store.commit("updateBills", response.data.data);
+        this.$store.commit("updateBills", response.data.data.list);
+        this.$store.commit("updateTotal", response.data.data.total)
       }
     }).catch(err => {
       console.log('query bills ', err.message);
@@ -142,8 +146,7 @@ export default {
       this.dateSection = val;
     },
     handleCurrentChange: function(val){
-      console.log(`当前页${val}`);
-      
+      this.flush(val)
     }
   }
 };
