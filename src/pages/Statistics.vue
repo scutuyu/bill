@@ -8,7 +8,7 @@
             <GroupByBillName/>
             <GroupByBillType/>
             <PayStyle/>
-            <List/>
+            <!-- <List/> -->
           </el-col>
         </el-row>
       </el-main>
@@ -29,7 +29,7 @@ export default {
     GroupByBillName,
     GroupByBillType,
     PayStyle,
-    List
+    // List
   }
 };
 </script>

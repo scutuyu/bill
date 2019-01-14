@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
+        pageSize: 10,
         billNames: null,
         billTypes: null,
         payStyles: null,

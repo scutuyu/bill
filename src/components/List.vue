@@ -102,7 +102,7 @@ export default {
       console.log('list flush');
       
       pageNum = pageNum || 1
-      let pageSize = 10;
+      let pageSize = this.$store.state.pageSize;
       let params = {
         start_date: formatDate(this.dateSection[0]),
         end_date: formatDate(this.dateSection[1]),
@@ -117,6 +117,8 @@ export default {
       } else {
         this.$store.commit("updateBills", response.data.data);
       }
+    }).catch(err => {
+      console.log('query bills ', err.message);
     });
     },
     payDateFormat(row, column) {

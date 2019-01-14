@@ -183,6 +183,9 @@ export default {
        })
        
        this.$store.commit('updateBillNames', arr)
+     }).catch(err => {
+       console.log('query bill names ', err.message);
+       
      });
     $http.getBillTypes().then(response => {
        let arr= [];
@@ -193,6 +196,9 @@ export default {
          arr.push(obj)
        })
        this.$store.commit('updateBillTypes', arr)
+     }).catch(err => {
+       console.log('query bill types ', err.message);
+       
      });
      $http.getPayStyles().then(response => {
        let arr = [];
@@ -203,7 +209,10 @@ export default {
          arr.push(obj)
        })
        this.$store.commit('updatePayStyles', arr);
-     })
+     }).catch(err => {
+       console.log('query pay styles ', err.message);
+       
+     });
   },
   methods: {
     getPayStyle: function(arr, name){
@@ -235,18 +244,14 @@ export default {
             if(res.data.code == '0'){
               this.$message.success('新增成功!')
               this.resetForm('billForm');
-              // this.$refs.billList.$emit('flush');
+              // 调用子组件的刷新列表方法
               this.$refs.billList.flush();
-              // $http.listBills().then(response => {
-              //   if(response.data.code != '0'){
-              //     this.$message.error(response.data.message)
-              //   }else{
-              //     this.$store.commit('updateBills', response.data.data)
-              //   }
-              // })
             }else{
               this.$message.error(res.data.message)
             }
+          }).catch(err => {
+            console.log('query bills ', err.message);
+            
           })
         }else{
           console.log('验证不通过');
