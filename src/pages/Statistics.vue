@@ -1,37 +1,37 @@
 <template>
   <div>
-    <el-container>
-      <el-main>
-        <el-row>
-          <el-col>
-            <GroupByDate/>
-            <GroupByBillName/>
-            <GroupByBillType/>
-            <PayStyle/>
+    <ElContainer>
+      <ElMain>
+        <ElRow>
+          <ElCol>
+            <GroupByDate />
+            <GroupByBillName />
+            <GroupByBillType />
+            <PayStyle />
             <!-- <List/> -->
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
+          </ElCol>
+        </ElRow>
+      </ElMain>
+    </ElContainer>
   </div>
 </template>
 
 <script>
-import GroupByDate from "../components/GroupByDate.vue";
-import GroupByBillName from "../components/GroupByBillName.vue";
-import GroupByBillType from "../components/GroupByBillType.vue";
-import PayStyle from "../components/GroupByPayStyle.vue";
-import List from "../components/List.vue";
+import GroupByDate from "../components/GroupByDate.vue"
+import GroupByBillName from "../components/GroupByBillName.vue"
+import GroupByBillType from "../components/GroupByBillType.vue"
+import PayStyle from "../components/GroupByPayStyle.vue"
+// import List from "../components/List.vue"
 export default {
-  name: "statistics",
+  name: "Statistics",
   components: {
     GroupByDate,
     GroupByBillName,
     GroupByBillType,
-    PayStyle,
+    PayStyle
     // List
   }
-};
+}
 </script>
 <style>
 </style>

@@ -1,63 +1,73 @@
 <template>
-  <div class="myTimePicker">
-    <el-row :gutter="0" type="flex" justify="center">
-      <el-col :xs="4" :sm="3" :md="2" :lg="2" :xl="1">
-        <el-select v-model="querySectionLabel" size="mini">
-          <el-option
-            v-for="item in querySectionType"
+  <ElRow
+    class="myTimePicker"
+    :gutter="0"
+    type="flex"
+    justify="center"
+  >
+    <ElCol :span="4">
+      <ElSelect v-model="querySectionLabel" size="mini">
+        <ElOption
+          v-for="item in querySectionType"
+          :key="item.value"
+          :label="item.label"
+          :value="item.label"
+        />
+      </ElSelect>
+    </ElCol>
+    <ElCol :span="4">
+      <ElSelect v-model="queryTimeLabel" size="mini">
+        <div v-if="querySectionValue === 0">
+          <ElOption
+            v-for="item in years"
             :key="item.value"
             :label="item.label"
             :value="item.label"
-          ></el-option>
-        </el-select>
-      </el-col>
-      <el-col :xs="4" :sm="3" :md="2" :lg="2" :xl="1">
-        <el-select v-model="queryTimeLabel" size="mini">
-          <div v-if="querySectionValue === 0">
-            <el-option
-              v-for="item in years"
-              :key="item.value"
-              :label="item.label"
-              :value="item.label"
-            ></el-option>
-          </div>
-          <div v-if="querySectionValue === 1">
-            <el-option
-              v-for="item in months"
-              :key="item.value"
-              :label="item.label"
-              :value="item.label"
-            ></el-option>
-          </div>
-        </el-select>
-      </el-col>
-      <el-col :xs="3" :sm="3" :md="2" :lg="2" :xl="1" class="customBtn">
-        <el-button size="mini" @click="custom">自定义</el-button>
-      </el-col>
-      <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1">
-        <div v-if="customTimeOption">
-          <el-date-picker
-            vi-if="customTimeOption"
-            v-model="customTime"
-            size="mini"
-            type="datetimerange"
-            :picker-options="customTimePickerOptions"
-            range-separator="至"
-            start-placeholde="开始日期"
-            end-placeholde="结束日期"
-            align="right"
-          ></el-date-picker>
+          />
         </div>
-      </el-col>
-      <el-col>
-        <el-button size="mini" @click="queryBtn" class="queryBtn">查询</el-button>
-      </el-col>
-    </el-row>
-  </div>
+        <div v-if="querySectionValue === 1">
+          <ElOption
+            v-for="item in months"
+            :key="item.value"
+            :label="item.label"
+            :value="item.label"
+          />
+        </div>
+      </ElSelect>
+    </ElCol>
+    <ElCol
+      :span="3"
+      class="customBtn"
+    >
+      <ElButton size="mini" @click="custom">
+        自定义
+      </ElButton>
+    </ElCol>
+    <ElCol
+      v-if="customTimeOption"
+      :span="11"
+    >
+      <ElDatePicker
+        v-model="customTime"
+        size="mini"
+        type="datetimerange"
+        :picker-options="customTimePickerOptions"
+        range-separator="至"
+        start-placeholde="开始日期"
+        end-placeholde="结束日期"
+        align="right"
+      />
+    </ElCol>
+    <ElCol :span="1">
+      <ElButton size="mini" @click="queryBtn">
+        查询
+      </ElButton>
+    </ElCol>
+  </ElRow>
 </template>
 
 <script>
-let querySectionType = [
+const querySectionType = [
   {
     value: 0,
     label: "年"
@@ -66,10 +76,10 @@ let querySectionType = [
     value: 1,
     label: "月"
   }
-];
-let defaultQuerySectionLabel = querySectionType[0].label;
-let defaultQuerySectionValue = querySectionType[0].value;
-let years = [
+]
+const defaultQuerySectionLabel = querySectionType[0].label
+const defaultQuerySectionValue = querySectionType[0].value
+const years = [
   {
     value: 0,
     label: 2018
@@ -82,8 +92,8 @@ let years = [
     value: 2,
     label: 2020
   }
-];
-let months = [
+]
+const months = [
   {
     value: 0,
     label: 1
@@ -132,42 +142,42 @@ let months = [
     value: 11,
     label: 12
   }
-];
-let defaultQueryTimeLabel =
-  defaultQuerySectionValue === 0 ? years[0].label : months[0].label;
-let defaultQueryTimeValue =
-  defaultQuerySectionValue === 0 ? years[0].value : months[0].value;
-let customTimePickerOptions = {
+]
+const defaultQueryTimeLabel =
+  defaultQuerySectionValue === 0 ? years[0].label : months[0].label
+const defaultQueryTimeValue =
+  defaultQuerySectionValue === 0 ? years[0].value : months[0].value
+const customTimePickerOptions = {
   shourtcuts: [
     {
       text: "最近一周",
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-        picker.$emit("pick", [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+        picker.$emit("pick", [start, end])
       }
     },
     {
       text: "最近一个月",
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        picker.$emit("pick", [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+        picker.$emit("pick", [start, end])
       }
     },
     {
       text: "最近三个月",
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 3);
-        picker.$emit("pick", [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 3)
+        picker.$emit("pick", [start, end])
       }
     }
   ]
-};
+}
 export default {
   data() {
     return {
@@ -182,81 +192,81 @@ export default {
       customTimeOption: false,
       customTime: "",
       customTimePickerOptions
-    };
-  },
-  mounted: function(){
-    this.emitDateSection();
+    }
   },
   watch: {
     querySectionLabel: function(val) {
-      let section = this.get(val);
-      this.querySectionValue = section.value;
+      const section = this.get(val)
+      this.querySectionValue = section.value
       this.queryTimeLabel =
-        section.value === 0 ? years[0].label : months[0].label;
+        section.value === 0 ? years[0].label : months[0].label
       if (this.customTimeOption) {
-        this.custom();
+        this.custom()
       }
       // this.emitDateSection();
     },
-    queryTimeLabel: function(val) {
+    queryTimeLabel: function() {
       if (this.customTimeOption) {
-        this.custom();
-      }else{
-        this.emitDateSection();
+        this.custom()
+      } else {
+        this.emitDateSection()
       }
     },
-    customTime: function(val){
-      this.emitDateSection();
+    customTime: function() {
+      this.emitDateSection()
     }
+  },
+  mounted: function() {
+    this.emitDateSection()
   },
   methods: {
     get: function(label) {
-      let arr = this.querySectionType;
+      const arr = this.querySectionType
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].label === label) {
-          return arr[i];
+          return arr[i]
         }
       }
-      return null;
+      return null
     },
     custom: function() {
-      this.customTimeOption = !this.customTimeOption;
-      this.customTime = null;
+      this.customTimeOption = !this.customTimeOption
+      this.customTime = null
     },
-    getDateSection: function(){
-      if(this.customTimeOption){
-          return this.customTime;
-      }else{
-        let timePicker = this.queryTimeLabel;
-        let start = null;
-        let end = null;
-        if(this.querySectionLabel === '年'){
-          start = new Date(timePicker, 0, 1);
-          end = new Date(timePicker, 11, 31);
-        }else{
-          let date = new Date();
-          let year = date.getFullYear();
-          date.setMonth(date.getMonth() + 1);
-          let days = date.setDate(0);
-          start = new Date(year, timePicker - 1, 1);
-          end = new Date(year, timePicker - 1, days);
+    getDateSection: function() {
+      if (this.customTimeOption) {
+        return this.customTime
+      } else {
+        const timePicker = this.queryTimeLabel
+        let start = null
+        let end = null
+        if (this.querySectionLabel === '年') {
+          start = new Date(timePicker, 0, 1)
+          end = new Date(timePicker, 11, 31)
+        } else {
+          const date = new Date()
+          const year = date.getFullYear()
+          date.setMonth(date.getMonth() + 1)
+          const days = date.setDate(0)
+          start = new Date(year, timePicker - 1, 1)
+          end = new Date(year, timePicker - 1, days)
         }
         return [start, end]
       }
     },
-    emitDateSection: function(){
-      this.dateSection = this.getDateSection();
-      if(this.dateSection){
-        this.$emit('returnDateSection', this.dateSection);
+    emitDateSection: function() {
+      this.dateSection = this.getDateSection()
+      if (this.dateSection) {
+        this.$emit('returnDateSection', this.dateSection)
       }
     },
-    queryBtn: function(){
-      console.log('time picker querybtn');
-      
-      this.$emit('queryData');
+    queryBtn: function() {
+      console.log('time picker querybtn')
+
+      this.$emit('queryData')
     }
   }
-};
+}
 </script>
 
 <style>
@@ -265,8 +275,5 @@ export default {
 }
 .customBtn{
   text-align: right;
-}
-.queryBtn{
-  margin-left: 350px;
 }
 </style>

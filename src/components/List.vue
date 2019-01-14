@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <TimePicker @returnDateSection="setDateSection" @queryData="flush"/>
-    <el-row>
-      <el-table
+    <TimePicker @returnDateSection="setDateSection" @queryData="flush" />
+    <ElRow>
+      <ElTable
         id="list"
         :data="tableData"
         border
@@ -11,15 +11,15 @@
         show-summary
         :default-sort="{prop: 'date', order: 'descending'}"
       >
-        <el-table-column
+        <ElTableColumn
           header-align="center"
           align="center"
           type="index"
           :index="indexGenerator"
           fixed
           width="50"
-        ></el-table-column>
-        <el-table-column
+        />
+        <ElTableColumn
           header-align="center"
           align="center"
           fixed
@@ -28,53 +28,79 @@
           :formatter="payDateFormat"
           label="日期"
           width="100"
-        ></el-table-column>
-        <el-table-column
+        />
+        <ElTableColumn
           header-align="center"
           align="center"
           prop="bill_name"
           sortable
           label="账单名称"
           width="120"
-        ></el-table-column>
-        <el-table-column header-align="center" align="center" prop="price" label="金额" width="90"></el-table-column>
-        <el-table-column
+        />
+        <ElTableColumn
+          header-align="center"
+          align="center"
+          prop="price"
+          label="金额"
+          width="90"
+        />
+        <ElTableColumn
           header-align="center"
           align="center"
           prop="pay_style"
           label="支付方式"
           width="90"
-        ></el-table-column>
-        <el-table-column
+        />
+        <ElTableColumn
           header-align="center"
           align="center"
           prop="bill_type"
           label="账单类型"
           width="90"
-        ></el-table-column>
-        <el-table-column header-align="center" align="center" prop="remark" label="备注" width="90"></el-table-column>
-        <el-table-column
+        />
+        <ElTableColumn
+          header-align="center"
+          align="center"
+          prop="remark"
+          label="备注"
+          width="90"
+        />
+        <ElTableColumn
           header-align="center"
           align="center"
           prop="create_time"
           label="添加时间"
           width="90"
-        ></el-table-column>
-        <el-table-column header-align="center" align="center" label="操作" width="150">
+        />
+        <ElTableColumn
+          header-align="center"
+          align="center"
+          label="操作"
+          width="150"
+        >
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <ElButton size="mini" @click="handleEdit(scope.$index, scope.row)">
+              编辑
+            </ElButton>
+            <ElButton size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+              删除
+            </ElButton>
           </template>
-        </el-table-column>
-      </el-table>
-    </el-row>
-    <el-pagination @current-change="handleCurrentChange" background layout="prev, pager, next" :total="total"></el-pagination>
+        </ElTableColumn>
+      </ElTable>
+    </ElRow>
+    <ElPagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
-import $http from "../utils/api.js";
-import { formatDate } from "../utils/utils.js";
+import $http from "../utils/api.js"
+import { formatDate } from "../utils/utils.js"
 // 表尾合计行
 // 带编辑按钮
 // 排序
@@ -87,69 +113,69 @@ export default {
     return {
       dateSection: null
       // tableData: []
-    };
+    }
   },
   computed: {
     tableData: function() {
-      return this.$store.state.bills;
+      return this.$store.state.bills
     },
-    total: function(){
-      return this.$store.state.total;
+    total: function() {
+      return this.$store.state.total
     }
   },
   mounted: function() {
     this.flush()
   },
   methods: {
-    flush: function(pageNum){
-      console.log('list flush');
-      
+    flush: function(pageNum) {
+      console.log('list flush')
+
       pageNum = pageNum || 1
-      let pageSize = this.$store.state.pageSize;
-      let params = {
+      const pageSize = this.$store.state.pageSize
+      const params = {
         start_date: formatDate(this.dateSection[0]),
         end_date: formatDate(this.dateSection[1]),
         page_num: pageNum,
         page_size: pageSize
       }
-      console.log(this.dateSection);
-      
+      console.log(this.dateSection)
+
       $http.listBills(params).then(response => {
-      if (response.data.code != "0") {
-        this.$message.error(response.data.message);
-      } else {
-        this.$store.commit("updateBills", response.data.data.list);
-        this.$store.commit("updateTotal", response.data.data.total)
-      }
-    }).catch(err => {
-      console.log('query bills ', err.message);
-    });
+        if (response.data.code !== "0") {
+          this.$message.error(response.data.message)
+        } else {
+          this.$store.commit("updateBills", response.data.data.list)
+          this.$store.commit("updateTotal", response.data.data.total)
+        }
+      }).catch(err => {
+        console.log('query bills ', err.message)
+      })
     },
     payDateFormat(row, column) {
-      let date = row[column.property];
-      if (date == undefined) {
-        return "";
+      const date = row[column.property]
+      if (date === undefined) {
+        return ""
       } else {
-        return formatDate(date, "yyyy-MM-dd");
+        return formatDate(date, "yyyy-MM-dd")
       }
     },
-    handleEdit: function(idx, row) {
+    handleEdit: function(_idx, _row) {
       // console.log('edit', idx, row);
     },
-    handleDelete: function(idx, row) {
+    handleDelete: function(_idx, _row) {
       // console.log('delete', idx, row);
     },
     indexGenerator: function(idx) {
-      return idx;
+      return idx
     },
     setDateSection: function(val) {
-      this.dateSection = val;
+      this.dateSection = val
     },
-    handleCurrentChange: function(val){
+    handleCurrentChange: function(val) {
       this.flush(val)
     }
   }
-};
+}
 </script>
 
 <style scoped>
