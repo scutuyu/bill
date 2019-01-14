@@ -6,12 +6,16 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         pageSize: 10,
+        total: 0,
         billNames: null,
         billTypes: null,
         payStyles: null,
         bills: []
     },
     mutations: {
+        updateTotal(state, info){
+            state.total = info
+        },
         updateBillNames(state, info){
             state.billNames = info
         },
