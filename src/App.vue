@@ -1,28 +1,41 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <el-container id="navigation">
+      <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+        <el-menu router>
+          <el-menu-item index="home">首页</el-menu-item>
+          <el-menu-item index="statistics">统计</el-menu-item>
+        </el-menu>
+      </el-aside>
+
+      <el-container>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  name: "app",
+  data: function() {
+    return {
+    };
+  },
+  methods: {
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+#navigation {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #eee;
 }
 </style>
