@@ -1,34 +1,32 @@
 <template>
   <div id="billType">
-    <TimePicker @returnDateSection="setDateSection"/>
-    <el-row type="flex" justify="center">
-      <div id="groupByBillType"></div>
-    </el-row>
-    
+    <TimePicker @returnDateSection="setDateSection" />
+    <ElRow type="flex" justify="center">
+      <div id="groupByBillType" />
+    </ElRow>
   </div>
 </template>
 
-
 <script>
-import echarts from "echarts";
+import echarts from "echarts"
 // import TimePicker from './TimePicker.vue'
 export default {
-  name: "groupByBillType",
+  name: "GroupByBillType",
   components: {
     // TimePicker
   },
   data() {
     return {
       chart: null
-    };
+    }
   },
   mounted() {
-    this.init("groupByBillType");
+    this.init("groupByBillType")
   },
   methods: {
     init: function(id) {
-      this.chart = echarts.init(document.getElementById(id));
-      let data = this.genData(50);
+      this.chart = echarts.init(document.getElementById(id))
+      const data = this.genData(50)
       const optionData = {
         title: {
           text: "同名数量统计",
@@ -65,10 +63,10 @@ export default {
             }
           }
         ]
-      };
-      this.chart.setOption(optionData);
+      }
+      this.chart.setOption(optionData)
     },
-    genData: function(count) {
+    genData: function(_count) {
       var nameList = [
         "赵", "钱", "孙", "李", "周", "吴", "郑", "王", "冯", "陈", "褚", "卫", "蒋", "沈", "韩", "杨",
         "朱", "秦", "尤", "许", "何", "吕", "施", "张", "孔", "曹", "严", "华", "金", "魏", "陶", "姜",
@@ -79,44 +77,44 @@ export default {
         "和", "穆", "萧", "尹", "姚", "邵", "湛", "汪", "祁", "毛", "禹", "狄", "米", "贝", "明", "臧",
         "计", "伏", "成", "戴", "谈", "宋", "茅", "庞", "熊", "纪", "舒", "屈", "项", "祝", "董", "梁",
         "杜", "阮", "蓝", "闵", "席", "季", "麻", "强", "贾", "路", "娄", "危"
-      ];
-      var legendData = [];
-      var seriesData = [];
-      var selected = {};
+      ]
+      var legendData = []
+      var seriesData = []
+      var selected = {}
       for (var i = 0; i < 50; i++) {
-        name =
+        const name =
           Math.random() > 0.65
             ? makeWord(4, 1) + "·" + makeWord(3, 0)
-            : makeWord(2, 1);
-        legendData.push(name);
+            : makeWord(2, 1)
+        legendData.push(name)
         seriesData.push({
           name: name,
           value: Math.round(Math.random() * 100000)
-        });
-        selected[name] = i < 6;
+        })
+        selected[name] = i < 6
       }
 
       return {
         legendData: legendData,
         seriesData: seriesData,
         selected: selected
-      };
+      }
 
       function makeWord(max, min) {
-        var nameLen = Math.ceil(Math.random() * max + min);
-        var name = [];
+        var nameLen = Math.ceil(Math.random() * max + min)
+        var name = []
         for (var i = 0; i < nameLen; i++) {
-          name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
+          name.push(nameList[Math.round(Math.random() * nameList.length - 1)])
         }
-        return name.join("");
+        return name.join("")
       }
     },
-    setDateSection: function(val){
-      this.dateSection = val;
+    setDateSection: function(val) {
+      this.dateSection = val
       console.log(val)
     }
   }
-};
+}
 </script>
 
 <style scoped>

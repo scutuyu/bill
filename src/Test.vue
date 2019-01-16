@@ -1,14 +1,14 @@
 <template>
-    <div>
-        test
-    </div>
+  <div>
+    test
+  </div>
 </template>
 <script>
 export default {
-    data: function(){
-        return {
-            name: 'test'
-        }
+  data: function() {
+    return {
+      name: 'test'
     }
+  }
 }
 </script>

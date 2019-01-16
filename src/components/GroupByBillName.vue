@@ -1,35 +1,34 @@
 <template>
   <div id="billName">
-    <TimePicker @returnDateSection="setDateSection"/>
-    <el-row type="flex" justify="center">
-      <div id="groupByBillName"></div>
-    </el-row>
+    <TimePicker @returnDateSection="setDateSection" />
+    <ElRow type="flex" justify="center">
+      <div id="groupByBillName" />
+    </ElRow>
   </div>
 </template>
 
-
 <script>
-import echarts from "echarts";
+import echarts from "echarts"
 // import "echarts/src/chart/pie";
 // import TimePicker from './TimePicker.vue'
 export default {
-  name: "groupByBillName",
+  name: "GroupByBillName",
   components: {
     // TimePicker
   },
   data: function() {
     return {
       chart: null
-    };
+    }
   },
   mounted() {
-    this.init("groupByBillName");
+    this.init("groupByBillName")
   },
   methods: {
     init: function(id) {
-      this.chart = echarts.init(document.getElementById(id));
+      this.chart = echarts.init(document.getElementById(id))
       const optionData = {
-         xAxis: {
+        xAxis: {
           type: "category",
           data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         },
@@ -44,15 +43,15 @@ export default {
             smooth: true
           }
         ]
-      };
-      this.chart.setOption(optionData);
+      }
+      this.chart.setOption(optionData)
     },
-    setDateSection: function(val){
-      this.dateSection = val;
+    setDateSection: function(val) {
+      this.dateSection = val
       console.log(val)
     }
   }
-};
+}
 </script>
 
 <style scoped>

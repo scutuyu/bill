@@ -1,35 +1,34 @@
 <template>
   <div>
-    <TimePicker @returnDateSection="setDateSection"/>
-    <el-row type="flex" justify="center">
-      <div id="groupByDate"></div>
-    </el-row>
+    <TimePicker @returnDateSection="setDateSection" />
+    <ElRow type="flex" justify="center">
+      <div id="groupByDate" />
+    </ElRow>
   </div>
 </template>
 
-
 <script>
-import echarts from "echarts";
+import echarts from "echarts"
 export default {
-  name: "groupByDate",
+  name: "GroupByDate",
   components: {},
   data() {
     return {
       dateSection: '',
       chart: null
-    };
-  },
-  mounted() {
-    this.init("groupByDate");
+    }
   },
   watch: {
-    dateSection: function(val){
+    dateSection: function(_val) {
 
     }
   },
+  mounted() {
+    this.init("groupByDate")
+  },
   methods: {
     init: function(id) {
-      this.chart = echarts.init(document.getElementById(id));
+      this.chart = echarts.init(document.getElementById(id))
       // this.chart.clear();
       const optionData = {
         xAxis: {
@@ -47,16 +46,16 @@ export default {
             smooth: true
           }
         ]
-      };
-      this.chart.setOption(optionData);
+      }
+      this.chart.setOption(optionData)
       // this.chart = chart;
     },
-    setDateSection: function(val){
-      this.dateSection = val;
+    setDateSection: function(val) {
+      this.dateSection = val
       console.log(val)
     }
   }
-};
+}
 </script>
 
 <style scoped>
