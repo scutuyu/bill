@@ -31,4 +31,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## Changelog
 [Learn about the latest improvements][changelog].
 
-[changelog]: https://raw.githubusercontent.com/scutuyu/bill/master/CHANGELOG.md
+[changelog]: https://github.com/scutuyu/bill/blob/master/CHANGELOG.md
