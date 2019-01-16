@@ -16,7 +16,7 @@
               v-model="billForm.pay_date"
               type="date"
               placeholder="请选择日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd"
               :picker-options="datePickerOptions"
             />
           </ElFormItem>

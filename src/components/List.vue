@@ -70,7 +70,7 @@
           align="center"
           prop="create_time"
           label="添加时间"
-          width="90"
+          width="180"
         />
         <ElTableColumn
           header-align="center"
@@ -82,6 +82,21 @@
             <ElButton size="mini" @click="handleEdit(scope.$index, scope.row)">
               编辑
             </ElButton>
+            <ElDialog title="编辑账单" :visible="dialogEditFormVisible">
+              <ElForm :model="editBillForm">
+                <ElFormItem label="账单类型" prop="type_id">
+                  aaa
+                </ElFormItem>
+              </ElForm>
+              <div slot="footer" class="dialog-footer">
+                <ElButton @click="dialogFormVisible = false">
+                  取消
+                </ElButton>
+                <ElButton type="primary" @click="dialogFormVisible = false">
+                  确 定
+                </ElButton>
+              </div>
+            </ElDialog>
             <ElButton size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
               删除
             </ElButton>
@@ -111,6 +126,16 @@ import { formatDate } from "../utils/utils.js"
 export default {
   data: function() {
     return {
+      dialogEditFormVisible: false,
+      editBillForm: {
+        bill_name: null,
+        bill_type: null,
+        id: null,
+        pay_date: null,
+        pay_style: null,
+        price: null,
+        remark: null
+      },
       dateSection: null
       // tableData: []
     }
@@ -160,10 +185,23 @@ export default {
       }
     },
     handleEdit: function(_idx, _row) {
-      // console.log('edit', idx, row);
+      this.dialogEditFormVisible = !this.dialogEditFormVisible
+      this.editBillForm = {
+        ... _row
+      }
+      console.log('edit', _idx, _row)
     },
     handleDelete: function(_idx, _row) {
-      // console.log('delete', idx, row);
+      console.log('delete', _idx, _row)
+      $http.deleteBill(_row.id).then(response => {
+        if (response.data.code !== '0') {
+          this.$message.error(response.data.message)
+        } else {
+          this.flush()
+        }
+      }).catch(err => {
+        console.log('delete bill ', err.message)
+      })
     },
     indexGenerator: function(idx) {
       return idx
