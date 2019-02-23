@@ -1,6 +1,6 @@
 <template>
   <div id="payStyle">
-    <TimePicker @returnDateSection="setDateSection" />
+    <TimePicker @returnDateSection="setDateSection" @queryData="flush" />
     <ElRow type="flex" justify="center">
       <div id="groupByPayStyle" />
     </ElRow>
@@ -9,15 +9,18 @@
 
 <script>
 import echarts from "echarts"
-// import TimePicker from './TimePicker.vue'
+import { formatDate } from "../utils/utils.js"
+import $http from "../utils/api.js"
 export default {
   name: "GroupByPayStyle",
   components: {
-    // TimePicker
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      legendData: [],
+      seriesData: [],
+      selected: []
     }
   },
   mounted() {
@@ -26,92 +29,81 @@ export default {
   methods: {
     init: function(id) {
       this.chart = echarts.init(document.getElementById(id))
-      const data = this.genData(50)
-      const optionData = {
-        title: {
-          text: "同名数量统计",
-          subtext: "纯属虚构",
-          x: "center"
-        },
+      this.flush()
+    },
+    getOptionData: function() {
+      const option = {
         tooltip: {
-          trigger: "item",
+          trigger: 'item',
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
-          type: "scroll",
-          orient: "vertical",
+          type: 'scroll',
+          orient: 'vertical',
           right: 10,
           top: 20,
           bottom: 20,
-          data: data.legendData,
+          data: this.legendData,
 
-          selected: data.selected
+          selected: this.selected
         },
+        color: [
+          '#7ac143',
+          '#00bce4',
+          '#d20962',
+          '#f47721',
+          '#00a78e',
+          '#7d3f98',
+          '#f85a40',
+          '#0a8ea0'
+        ],
         series: [
           {
-            name: "姓名",
-            type: "pie",
-            radius: "55%",
-            center: ["40%", "50%"],
-            data: data.seriesData,
+            name: '支付类型',
+            type: 'pie',
+            radius: '55%',
+            center: ['40%', '50%'],
+            data: this.seriesData,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
                 shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)"
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
               }
             }
           }
         ]
       }
-      this.chart.setOption(optionData)
-    },
-    genData: function(_count) {
-      var nameList = [
-        "赵", "钱", "孙", "李", "周", "吴", "郑", "王", "冯", "陈", "褚", "卫", "蒋", "沈", "韩", "杨",
-        "朱", "秦", "尤", "许", "何", "吕", "施", "张", "孔", "曹", "严", "华", "金", "魏", "陶", "姜",
-        "戚", "谢", "邹", "喻", "柏", "水", "窦", "章", "云", "苏", "潘", "葛", "奚", "范", "彭", "郎",
-        "鲁", "韦", "昌", "马", "苗", "凤", "花", "方", "俞", "任", "袁", "柳", "酆", "鲍", "史", "唐",
-        "费", "廉", "岑", "薛", "雷", "贺", "倪", "汤", "滕", "殷", "罗", "毕", "郝", "邬", "安", "常",
-        "乐", "于", "时", "傅", "皮", "卞", "齐", "康", "伍", "余", "元", "卜", "顾", "孟", "平", "黄",
-        "和", "穆", "萧", "尹", "姚", "邵", "湛", "汪", "祁", "毛", "禹", "狄", "米", "贝", "明", "臧",
-        "计", "伏", "成", "戴", "谈", "宋", "茅", "庞", "熊", "纪", "舒", "屈", "项", "祝", "董", "梁",
-        "杜", "阮", "蓝", "闵", "席", "季", "麻", "强", "贾", "路", "娄", "危"
-      ]
-      var legendData = []
-      var seriesData = []
-      var selected = {}
-      for (var i = 0; i < 50; i++) {
-        const name =
-          Math.random() > 0.65
-            ? makeWord(4, 1) + "·" + makeWord(3, 0)
-            : makeWord(2, 1)
-        legendData.push(name)
-        seriesData.push({
-          name: name,
-          value: Math.round(Math.random() * 100000)
-        })
-        selected[name] = i < 6
-      }
-
-      return {
-        legendData: legendData,
-        seriesData: seriesData,
-        selected: selected
-      }
-
-      function makeWord(max, min) {
-        var nameLen = Math.ceil(Math.random() * max + min)
-        var name = []
-        for (var i = 0; i < nameLen; i++) {
-          name.push(nameList[Math.round(Math.random() * nameList.length - 1)])
-        }
-        return name.join("")
-      }
+      return option
     },
     setDateSection: function(val) {
       this.dateSection = val
       console.log(val)
+    },
+    flush: function(_val) {
+      const params = {
+        start_date: formatDate(this.dateSection[0]),
+        end_date: formatDate(this.dateSection[1])
+      }
+      console.log('flush group by date', params)
+      $http.groupByBillPayStyle(params).then(res => {
+        if (res.data.code !== "0") {
+          this.$message.error(res.data.message)
+        } else {
+          this.legendData = res.data.data.legend_data
+          this.seriesData = res.data.data.series_data
+          this.selected = this.getSelectedLegends(this.legendData, 6)
+        }
+        this.chart.setOption(this.getOptionData())
+      }).catch(err => {
+        console.log('group by date error:  ', err.message)
+      })
+    },
+    getSelectedLegends: function(legends, len) {
+      const result = {}
+      for (var i = 0; i < len; i++) {
+        result[i] = i < len
+      }
     }
   }
 }

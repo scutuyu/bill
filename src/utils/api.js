@@ -51,19 +51,27 @@ class Api {
   }
 
   groupByDate(params) {
-    return server.get(`${api}/${statistics}/group_by_date`, params)
+    return server.get(`${api}/${statistics}/group_by_date`, {
+      params
+    })
   }
 
   groupByBillName(params) {
-    return server.get(`${api}/${statistics}/group_by_bill_name`, params)
+    return server.get(`${api}/${statistics}/group_by_bill_name`, {
+      params
+    })
   }
 
   groupByBillType(params) {
-    return server.get(`${api}/${statistics}/group_by_bill_type`, params)
+    return server.get(`${api}/${statistics}/group_by_bill_type`, {
+      params
+    })
   }
 
   groupByBillPayStyle(params) {
-    return server.get(`${api}/${statistics}/group_by_pay_style`, params)
+    return server.get(`${api}/${statistics}/group_by_pay_style`, {
+      params
+    })
   }
 
   getPayStyles() {

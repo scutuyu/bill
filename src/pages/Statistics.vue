@@ -8,7 +8,6 @@
             <GroupByBillName />
             <GroupByBillType />
             <PayStyle />
-            <!-- <List/> -->
           </ElCol>
         </ElRow>
       </ElMain>
@@ -21,7 +20,6 @@ import GroupByDate from "../components/GroupByDate.vue"
 import GroupByBillName from "../components/GroupByBillName.vue"
 import GroupByBillType from "../components/GroupByBillType.vue"
 import PayStyle from "../components/GroupByPayStyle.vue"
-// import List from "../components/List.vue"
 export default {
   name: "Statistics",
   components: {
@@ -29,7 +27,6 @@ export default {
     GroupByBillName,
     GroupByBillType,
     PayStyle
-    // List
   }
 }
 </script>

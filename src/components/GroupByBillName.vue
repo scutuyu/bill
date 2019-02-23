@@ -1,6 +1,6 @@
 <template>
   <div id="billName">
-    <TimePicker @returnDateSection="setDateSection" />
+    <TimePicker @returnDateSection="setDateSection" @queryData="flush" />
     <ElRow type="flex" justify="center">
       <div id="groupByBillName" />
     </ElRow>
@@ -9,16 +9,17 @@
 
 <script>
 import echarts from "echarts"
-// import "echarts/src/chart/pie";
-// import TimePicker from './TimePicker.vue'
+import { formatDate } from "../utils/utils.js"
+import $http from "../utils/api.js"
 export default {
   name: "GroupByBillName",
   components: {
-    // TimePicker
   },
   data: function() {
     return {
-      chart: null
+      chart: null,
+      xAxis: [],
+      yAxis: []
     }
   },
   mounted() {
@@ -27,28 +28,103 @@ export default {
   methods: {
     init: function(id) {
       this.chart = echarts.init(document.getElementById(id))
+      this.flush()
+    },
+    getOptionData: function() {
       const optionData = {
+        toolbox: {
+          feature: {
+            dataZoom: {
+              yAxisIndex: false
+            },
+            saveAsImage: {
+              pixelRatio: 2
+            }
+          }
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          },
+          position: function(pt) {
+            return [pt[0], '10%']
+          }
+        },
+        grid: {
+          bottom: 90
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            start: 0,
+            end: 10
+          },
+          {
+            type: 'slider',
+            start: 0,
+            end: 10
+          }
+        ],
         xAxis: {
-          type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+          data: this.xAxis,
+          silent: false,
+          splitLine: {
+            show: false
+          },
+          splitArea: {
+            show: false
+          }
         },
         yAxis: {
-          type: "value"
-        },
-        series: [
-          {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            // type: 'line',
-            type: "bar",
-            smooth: true
+          splitArea: {
+            show: false
           }
-        ]
+        },
+        // color: [
+        //   // '#d20962',
+        //   '#f47721',
+        //   '#7ac143',
+        //   '#00a78e',
+        //   '#00bce4',
+        //   '#7d3f98',
+        //   '#f85a40',
+        //   '#0a8ea0'
+        // ],
+        series: [{
+          type: 'bar',
+          data: this.yAxis,
+          itemStyle: {
+            color: 'rgb(10, 191, 83)'
+          },
+          // Set `large` for large data amount
+          large: true
+        }]
+        // color: ['rgb(254,67,101)', 'rgb(252,157,154)', 'rgb(249,205,173)', 'rgb(200,200,169)', 'rgb(131,175,155)']
       }
-      this.chart.setOption(optionData)
+      return optionData
     },
     setDateSection: function(val) {
       this.dateSection = val
       console.log(val)
+    },
+    flush: function(_val) {
+      const params = {
+        start_date: formatDate(this.dateSection[0]),
+        end_date: formatDate(this.dateSection[1])
+      }
+      console.log('flush group by date', params)
+      $http.groupByBillName(params).then(res => {
+        if (res.data.code !== "0") {
+          this.$message.error(res.data.message)
+        } else {
+          this.xAxis = res.data.data.x_axis
+          this.yAxis = res.data.data.y_axis
+        }
+        this.chart.setOption(this.getOptionData())
+      }).catch(err => {
+        console.log('group by date error:  ', err.message)
+      })
     }
   }
 }
