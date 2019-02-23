@@ -16,6 +16,7 @@
           align="center"
           type="index"
           :index="indexGenerator"
+          label="序号"
           fixed
           width="50"
         />

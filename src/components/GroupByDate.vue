@@ -4,7 +4,6 @@
     <ElRow type="flex" justify="center">
       <div id="groupByDate" />
     </ElRow>
-    {{ xAxis.length }}
   </div>
 </template>
 
