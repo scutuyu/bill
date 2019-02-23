@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="billList">
     <TimePicker @returnDateSection="setDateSection" @queryData="flush" />
     <ElRow>
       <ElTable
@@ -82,21 +82,6 @@
             <ElButton size="mini" @click="handleEdit(scope.$index, scope.row)">
               编辑
             </ElButton>
-            <ElDialog title="编辑账单" :visible="dialogEditFormVisible">
-              <ElForm :model="editBillForm">
-                <ElFormItem label="账单类型" prop="type_id">
-                  aaa
-                </ElFormItem>
-              </ElForm>
-              <div slot="footer" class="dialog-footer">
-                <ElButton @click="dialogFormVisible = false">
-                  取消
-                </ElButton>
-                <ElButton type="primary" @click="dialogFormVisible = false">
-                  确 定
-                </ElButton>
-              </div>
-            </ElDialog>
             <ElButton size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
               删除
             </ElButton>
@@ -105,17 +90,35 @@
       </ElTable>
     </ElRow>
     <ElPagination
+      id="billPage"
       background
-      layout="prev, pager, next"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-sizes="[10, 20, 30, 40, 50, 100]"
+      :page-size="10"
       :total="total"
+      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <ElDialog ref="dialogBillFormRef" title="编辑账单" :visible="dialogEditFormVisible">
+      <span>
+        <BillForm :key="randomKey()" :init-bill-form="editBillForm" />
+      </span>
+      <div slot="footer" class="dialog-footer">
+        <ElButton @click="dialogEditFormVisible = false">
+          取消
+        </ElButton>
+        <ElButton type="primary" @click="dialogEditFormVisible = false;editBillForm = null">
+          确 定
+        </ElButton>
+      </div>
+    </ElDialog>
   </div>
 </template>
 
 <script>
 import $http from "../utils/api.js"
 import { formatDate } from "../utils/utils.js"
+import BillForm from "../components/BillForm.vue"
 // 表尾合计行
 // 带编辑按钮
 // 排序
@@ -124,6 +127,9 @@ import { formatDate } from "../utils/utils.js"
 // 固定列和表头
 // 带状态，最近一周显示状态
 export default {
+  components: {
+    BillForm
+  },
   data: function() {
     return {
       dialogEditFormVisible: false,
@@ -152,6 +158,9 @@ export default {
     this.flush()
   },
   methods: {
+    randomKey: function() {
+      return new Date().getTime()
+    },
     flush: function(pageNum) {
       console.log('list flush')
 
@@ -189,7 +198,14 @@ export default {
       this.editBillForm = {
         ... _row
       }
-      console.log('edit', _idx, _row)
+      if (!this.$refs['dialogBillFormRef']) {
+        console.log('flush')
+
+        this.$refs['dialogBillFormRef'].flush()
+      } else {
+        console.log('null', this.$refs['dialogBillFormRef'].flush)
+      }
+      console.log('edit', _idx, this.editBillForm)
     },
     handleDelete: function(_idx, _row) {
       console.log('delete', _idx, _row)
@@ -204,23 +220,30 @@ export default {
       })
     },
     indexGenerator: function(idx) {
-      return idx
+      return idx + 1
     },
     setDateSection: function(val) {
       this.dateSection = val
     },
     handleCurrentChange: function(val) {
       this.flush(val)
+    },
+    handleSizeChange: function(val) {
+      this.$store.commit('updatePageSize', val)
+      this.flush()
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 /* #list {
   width: 800px;
 } */
-#app {
+/* #app {
   width: 80%;
+} */
+#billPage .el-input__inner{
+  width: 80px !important;
 }
 </style>

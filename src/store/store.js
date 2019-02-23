@@ -13,6 +13,9 @@ const store = new Vuex.Store({
     bills: []
   },
   mutations: {
+    updatePageSize(state, info) {
+      state.pageSize = info
+    },
     updateTotal(state, info) {
       state.total = info
     },
