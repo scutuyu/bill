@@ -94,7 +94,7 @@
       id="billPage"
       background
       layout="total, sizes, prev, pager, next, jumper"
-      :page-sizes="[10, 20, 30, 40, 50, 100]"
+      :page-sizes="[10, 20, 30, 40, 50, 100, 1000, 10000]"
       :page-size="10"
       :total="total"
       @size-change="handleSizeChange"

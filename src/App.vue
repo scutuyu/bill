@@ -1,32 +1,36 @@
 <template>
   <div id="app">
-    <el-container id="navigation">
-      <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-        <el-menu router>
-          <el-menu-item index="home">首页</el-menu-item>
-          <el-menu-item index="statistics">统计</el-menu-item>
-        </el-menu>
-      </el-aside>
+    <ElContainer id="navigation">
+      <ElAside width="200px" style="background-color: rgb(238, 241, 246)">
+        <ElMenu router>
+          <ElMenuItem index="home">
+            首页
+          </ElMenuItem>
+          <ElMenuItem index="statistics">
+            统计
+          </ElMenuItem>
+        </ElMenu>
+      </ElAside>
 
-      <el-container>
-        <el-main>
-          <router-view></router-view>
-        </el-main>
-      </el-container>
-    </el-container>
+      <ElContainer>
+        <ElMain>
+          <RouterView />
+        </ElMain>
+      </ElContainer>
+    </ElContainer>
   </div>
 </template>
 
 <script>
 export default {
-  name: "app",
+  name: "App",
   data: function() {
     return {
-    };
+    }
   },
   methods: {
   }
-};
+}
 </script>
 
 <style>
