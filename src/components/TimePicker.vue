@@ -1,55 +1,41 @@
 <template>
-  <!-- <div class="wrapper">
+  <div class="wrapper">
+    <ElSelect v-if="!customTimeOption" v-model="querySectionLabel" size="mini">
+      <ElOption
+        v-for="item in querySectionType"
+        :key="item.value"
+        :label="item.label"
+        :value="item.label"
+      />
+    </ElSelect>
 
-  </div> -->
-  <ElRow
-    class="myTimePicker"
-    :gutter="0"
-    type="flex"
-    justify="center"
-  >
-    <ElCol>
-      <ElSelect v-model="querySectionLabel" size="mini">
+    <ElSelect v-if="!customTimeOption" v-model="queryTimeLabel" size="mini">
+      <div v-if="querySectionValue === 0">
         <ElOption
-          v-for="item in querySectionType"
+          v-for="item in years"
           :key="item.value"
           :label="item.label"
           :value="item.label"
         />
-      </ElSelect>
-    </ElCol>
-    <ElCol>
-      <ElSelect v-model="queryTimeLabel" size="mini">
-        <div v-if="querySectionValue === 0">
-          <ElOption
-            v-for="item in years"
-            :key="item.value"
-            :label="item.label"
-            :value="item.label"
-          />
-        </div>
-        <div v-if="querySectionValue === 1">
-          <ElOption
-            v-for="item in months"
-            :key="item.value"
-            :label="item.label"
-            :value="item.label"
-          />
-        </div>
-      </ElSelect>
-    </ElCol>
-    <ElCol
+      </div>
+      <div v-if="querySectionValue === 1">
+        <ElOption
+          v-for="item in months"
+          :key="item.value"
+          :label="item.label"
+          :value="item.label"
+        />
+      </div>
+    </ElSelect>
 
-      class="customBtn"
-    >
+    <div class="customBtn">
       <ElButton size="mini" @click="custom">
-        自定义
+        {{ customTimeOption ? '选择' : '自定义' }}
       </ElButton>
-    </ElCol>
-    <ElCol
-      v-if="customTimeOption"
-    >
-      <ElDatePicker
+    </div>
+
+    <div v-if="customTimeOption">
+      <!-- <ElDatePicker
         v-model="customTime"
         size="mini"
         type="datetimerange"
@@ -58,14 +44,27 @@
         start-placeholde="开始日期"
         end-placeholde="结束日期"
         align="right"
+      /> -->
+      <ElDatePicker
+        v-model="customStartTime"
+        type="datetime"
+        placeholder="选择开始日期时间"
+        align="right"
+        :picker-options="customTimePickerOptions"
       />
-    </ElCol>
-    <ElCol>
-      <ElButton size="mini" @click="queryBtn">
-        查询
-      </ElButton>
-    </ElCol>
-  </ElRow>
+      -
+      <ElDatePicker
+        v-model="customEndTime"
+        type="datetime"
+        placeholder="选择结束日期时间"
+        align="right"
+        :picker-options="customTimePickerOptions"
+      />
+    </div>
+    <ElButton size="mini" @click="queryBtn">
+      查询
+    </ElButton>
+  </div>
 </template>
 
 <script>
@@ -162,28 +161,31 @@ const customTimePickerOptions = {
     {
       text: "最近一周",
       onClick(picker) {
-        const end = new Date()
+        // const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-        picker.$emit("pick", [start, end])
+        // picker.$emit("pick", [start, end])
+        picker.$emit("pick", start)
       }
     },
     {
       text: "最近一个月",
       onClick(picker) {
-        const end = new Date()
+        // const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-        picker.$emit("pick", [start, end])
+        // picker.$emit("pick", [start, end])
+        picker.$emit("pick", start)
       }
     },
     {
       text: "最近三个月",
       onClick(picker) {
-        const end = new Date()
+        // const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 3)
-        picker.$emit("pick", [start, end])
+        // picker.$emit("pick", [start, end])
+        picker.$emit("pick", start)
       }
     }
   ]
@@ -201,15 +203,19 @@ export default {
       queryTimeValue: defaultQueryTimeValue,
       customTimeOption: false,
       customTime: "",
-      customTimePickerOptions
+      customTimePickerOptions,
+      customStartTime: null,
+      customEndTime: null
     }
   },
   watch: {
     querySectionLabel: function(val) {
       const section = this.get(val)
       this.querySectionValue = section.value
+      // 0 表示年， 1 表示月
       this.queryTimeLabel =
-        section.value === 0 ? years[0].label : months[0].label
+        section.value === 0 ? this.getCurYear() : this.getCurMonth()
+      // this.queryTimeLabel = section.value + 1
       if (this.customTimeOption) {
         this.custom()
       }
@@ -238,40 +244,78 @@ export default {
       }
       return null
     },
+    getCurYear: function() {
+      const now = new Date().getFullYear()
+      return now
+      // const ys = this.years
+      // for (let i = 0; i < ys.length; i++) {
+      //   if (ys[i].label === now) {
+      //     return ys[i].value
+      //   }
+      // }
+      // return null
+    },
+    getCurMonth: function() {
+      // const ms = this.months
+      const now = new Date().getMonth() + 1
+      return now
+      // for (let i = 0; i < ms.length; i++) {
+      //   if (ms[i].label === now) {
+      //     return ms[i].value
+      //   }
+      // }
+      // return null
+    },
     custom: function() {
       this.customTimeOption = !this.customTimeOption
       this.customTime = null
     },
+    // 获取本组件的时间区间
     getDateSection: function() {
+      // 1. 判断组件是自定义方式获取时间区间还是选择的方式
       if (this.customTimeOption) {
+        // 2. 如果是自定义获取时间的的方式
+        console.log("自定义方式获取时间")
+
         return this.customTime
       } else {
+        // 3. 如果是选择的方式
         const timePicker = this.queryTimeLabel
         let start = null
         let end = null
+        // 3. 如果是按年查询
         if (this.querySectionLabel === '年') {
+          // Date对象的构造函数可以有6个，年月日时分秒, 设置某年1月1日-某年12月31日
           start = new Date(timePicker, 0, 1)
           end = new Date(timePicker, 11, 31)
+          console.log("按年的方式获取时间")
         } else {
+          // 4. 如果是按月查询
           const date = new Date()
+          // 获取当年
           const year = date.getFullYear()
-          date.setMonth(date.getMonth() + 1)
-          const days = date.setDate(0)
+          // 为了取得某年某月有多少天，需要往Date的构造函数中传入month + 1 月，0日，即可得到上一个月的最后一天的日期，
+          // 再调用getDate()即可
           start = new Date(year, timePicker - 1, 1)
-          end = new Date(year, timePicker - 1, days)
+          end = new Date(year, timePicker, 0, 0, 0, 0)
+          console.log("按月的方式获取时间")
         }
+        // 5. 返回时间区间
         return [start, end]
       }
     },
+    // 向父组件传递时间区间
     emitDateSection: function() {
+      // 1. 先获取本组件中的时间区间
       this.dateSection = this.getDateSection()
+      console.log("时间组件向父组件发送时间区间", this.dateSection)
+
+      // 2. 如果时间区间不为空，就发送
       if (this.dateSection) {
         this.$emit('returnDateSection', this.dateSection)
       }
     },
     queryBtn: function() {
-      console.log('time picker querybtn')
-
       this.$emit('queryData')
     }
   }
@@ -284,5 +328,9 @@ export default {
 }
 .customBtn{
   text-align: right;
+}
+.wrapper{
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>

@@ -188,6 +188,7 @@ export default {
 
       pageNum = pageNum || 1
       const pageSize = this.$store.state.pageSize
+      console.log('from list:....', this.dateSection)
       const params = {
         start_date: formatDate(this.dateSection[0]),
         end_date: formatDate(this.dateSection[1]),
