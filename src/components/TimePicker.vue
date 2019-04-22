@@ -1,11 +1,14 @@
 <template>
+  <!-- <div class="wrapper">
+
+  </div> -->
   <ElRow
     class="myTimePicker"
     :gutter="0"
     type="flex"
     justify="center"
   >
-    <ElCol :span="4">
+    <ElCol>
       <ElSelect v-model="querySectionLabel" size="mini">
         <ElOption
           v-for="item in querySectionType"
@@ -15,7 +18,7 @@
         />
       </ElSelect>
     </ElCol>
-    <ElCol :span="4">
+    <ElCol>
       <ElSelect v-model="queryTimeLabel" size="mini">
         <div v-if="querySectionValue === 0">
           <ElOption
@@ -36,7 +39,7 @@
       </ElSelect>
     </ElCol>
     <ElCol
-      :span="3"
+
       class="customBtn"
     >
       <ElButton size="mini" @click="custom">
@@ -45,7 +48,6 @@
     </ElCol>
     <ElCol
       v-if="customTimeOption"
-      :span="11"
     >
       <ElDatePicker
         v-model="customTime"
@@ -58,7 +60,7 @@
         align="right"
       />
     </ElCol>
-    <ElCol :span="1">
+    <ElCol>
       <ElButton size="mini" @click="queryBtn">
         查询
       </ElButton>
