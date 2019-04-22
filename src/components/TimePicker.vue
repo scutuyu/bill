@@ -143,10 +143,18 @@ const months = [
     label: 12
   }
 ]
+const now = new Date().getFullYear()
+let defaultYear = {}
+for (var i = 0; i < years.length; i++) {
+  if (years[i].label === now) {
+    defaultYear = years[i]
+    break
+  }
+}
 const defaultQueryTimeLabel =
-  defaultQuerySectionValue === 0 ? years[0].label : months[0].label
+  defaultQuerySectionValue === 0 ? defaultYear.label : months[0].label
 const defaultQueryTimeValue =
-  defaultQuerySectionValue === 0 ? years[0].value : months[0].value
+  defaultQuerySectionValue === 0 ? defaultYear.value : months[0].value
 const customTimePickerOptions = {
   shourtcuts: [
     {
@@ -203,7 +211,6 @@ export default {
       if (this.customTimeOption) {
         this.custom()
       }
-      // this.emitDateSection();
     },
     queryTimeLabel: function() {
       if (this.customTimeOption) {

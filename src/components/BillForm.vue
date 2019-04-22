@@ -55,61 +55,6 @@
             </ElFormItem>
           </ElCol>
         </div>
-        <!-- <ElCol class="test1">
-          <ElFormItem label="日期" prop="pay_date">
-            <ElDatePicker
-              v-model="billForm.pay_date"
-              type="date"
-              placeholder="请选择日期"
-              value-format="yyyy-MM-dd"
-              :picker-options="datePickerOptions"
-            />
-          </ElFormItem>
-        </ElCol> -->
-        <!-- <ElCol class="test1">
-          <ElFormItem label="名称" prop="bill_name">
-            <ElAutocomplete
-              v-model="billForm.bill_name"
-              class="inline-input"
-              :fetch-suggestions="getBillNames"
-              placeholder="名称"
-              @select="handleSelect"
-            />
-          </ElFormItem>
-        </ElCol> -->
-        <!-- <ElCol class="test1">
-          <ElFormItem label="账单类型" prop="type_id">
-            <ElSelect v-model="billForm.type_id" automatic-dropdown>
-              <ElOption
-                v-for="item in billTypes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </ElSelect>
-          </ElFormItem>
-        </ElCol> -->
-        <!-- <ElCol class="test1">
-          <ElFormItem label="金额" prop="price">
-            <ElInput
-              v-model="billForm.price"
-              type="number"
-              placeholder="请输入金额"
-            />
-          </ElFormItem>
-        </ElCol> -->
-        <!-- <ElCol class="test1">
-          <ElFormItem label="支付方式" prop="pay_style_id">
-            <ElSelect v-model="billForm.pay_style_id" automatic-dropdown>
-              <ElOption
-                v-for="item in payStyles"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </ElSelect>
-          </ElFormItem>
-        </ElCol> -->
         <div class="test1">
           <ElFormItem label="支付方式" prop="pay_style_id">
             <ElSelect v-model="billForm.pay_style_id" automatic-dropdown>
@@ -132,16 +77,6 @@
             />
           </ElFormItem>
         </div>
-        <!-- <ElCol class="test1">
-          <ElFormItem label="备注" prop="remark">
-            <ElInput
-              v-model="billForm.remark"
-              type="textarea"
-              :rows="1"
-              placeholder="备注"
-            />
-          </ElFormItem>
-        </ElCol> -->
       </ElRow>
       <ElFormItem>
         <ElButton type="primary" native-type="submit" @click="submitForm('billForm')">
