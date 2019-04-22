@@ -1,18 +1,18 @@
 <template>
   <div class="page-home">
-    <BillForm @flushTable="flushTable" />
+    <AddBill @flushTable="flushTable" />
     <List ref="billList" />
   </div>
 </template>
 <script>
 import $http from '../utils/api.js'
 import List from '../components/List.vue'
-import BillForm from '../components/BillForm.vue'
+import AddBill from '../components/AddBill.vue'
 export default {
   name: "Home",
   components: {
     List,
-    BillForm
+    AddBill
   },
   data: function() {
     return {
@@ -58,6 +58,8 @@ export default {
   },
   methods: {
     flushTable: function() {
+      console.log("home flush table....")
+
       this.$refs.billList.flush()
     }
   }

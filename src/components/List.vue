@@ -83,7 +83,7 @@
             <ElButton size="mini" @click="handleEdit(scope.$index, scope.row)">
               编辑
             </ElButton>
-            <ElButton size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+            <ElButton size="mini" type="danger" @click="dialogDeleteFormVisible = true;setDeleteScope(scope)">
               删除
             </ElButton>
           </template>
@@ -100,15 +100,35 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <ElDialog ref="dialogBillFormRef" title="编辑账单" :visible="dialogEditFormVisible">
+    <ElDialog
+      ref="dialogBillFormRef"
+      title="编辑账单"
+      :visible.sync="dialogEditFormVisible"
+      width="500px"
+      center
+      show-close
+      close-on-press-escape
+    >
       <span>
-        <BillForm :key="randomKey()" :init-bill-form="editBillForm" />
+        <BillForm :key="randomKey()" :init-bill-form="editBillForm" @submitMethod="updateBill" />
+      </span>
+    </ElDialog>
+    <ElDialog
+      title="删除账单"
+      :visible.sync="dialogDeleteFormVisible"
+      width="500px"
+      center
+      show-close
+      close-on-press-escape
+    >
+      <span>
+        确实要删除该账单吗？
       </span>
       <div slot="footer" class="dialog-footer">
-        <ElButton @click="dialogEditFormVisible = false">
+        <ElButton @click="dialogDeleteFormVisible = false">
           取消
         </ElButton>
-        <ElButton type="primary" @click="dialogEditFormVisible = false;editBillForm = null">
+        <ElButton type="primary" @click="handleDelete()">
           确 定
         </ElButton>
       </div>
@@ -134,6 +154,7 @@ export default {
   data: function() {
     return {
       dialogEditFormVisible: false,
+      dialogDeleteFormVisible: false,
       editBillForm: {
         bill_name: null,
         bill_type: null,
@@ -143,8 +164,8 @@ export default {
         price: null,
         remark: null
       },
-      dateSection: null
-      // tableData: []
+      dateSection: null,
+      deleteScope: null
     }
   },
   computed: {
@@ -208,7 +229,23 @@ export default {
       }
       console.log('edit', _idx, this.editBillForm)
     },
-    handleDelete: function(_idx, _row) {
+    updateBill: function(val) {
+      console.log("hello", val)
+
+      $http.updateBill(val).then(res => {
+        if (res.data.code !== '0') {
+          this.$message.error(res.data.message)
+        } else {
+          this.flush()
+        }
+      }).catch(err => {
+        console.log('update bill ', err.message)
+      })
+    },
+    handleDelete: function() {
+      var _idx = this.deleteScope.$index
+      var _row = this.deleteScope.row
+      this.dialogDeleteFormVisible = false
       console.log('delete', _idx, _row)
       $http.deleteBill(_row.id).then(response => {
         if (response.data.code !== '0') {
@@ -232,18 +269,18 @@ export default {
     handleSizeChange: function(val) {
       this.$store.commit('updatePageSize', val)
       this.flush()
+    },
+    setDeleteScope: function(scope) {
+      this.deleteScope = scope
+    },
+    clearDeleteScope: function() {
+      this.deleteScope = null
     }
   }
 }
 </script>
 
 <style>
-/* #list {
-  width: 800px;
-} */
-/* #app {
-  width: 80%;
-} */
 #billPage .el-input__inner{
   width: 80px !important;
 }
