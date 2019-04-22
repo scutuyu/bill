@@ -122,7 +122,7 @@
       close-on-press-escape
     >
       <span>
-        确实要删除 【{{ deleteScope.row.bill_name }}】:【{{ deleteScope.row.pay_date }}】 【{{ deleteScope.row.price }}】 账单吗？
+        确实要删除 【{{ deleteScope && deleteScope.row.bill_name }}】:【{{ deleteScope && deleteScope.row.pay_date }}】 【{{ deleteScope && deleteScope.row.price }}】 账单吗？
       </span>
       <div slot="footer" class="dialog-footer">
         <ElButton @click="dialogDeleteFormVisible = false">
