@@ -1,8 +1,17 @@
 <template>
   <div id="app">
     <ElContainer id="navigation">
-      <ElAside width="200px" style="background-color: rgb(238, 241, 246)">
+      <ElAside v-show="showNavigation" style="background-color: rgb(238, 241, 246)">
         <ElMenu router>
+          <!-- <ElMenuItem index="home">
+            首页
+          </ElMenuItem>
+          <ElMenuItem index="statistics">
+            统计
+          </ElMenuItem> -->
+          <ElMenuItem index="home">
+            <i class="el-icon-arrow-left" />
+          </ElMenuItem>
           <ElMenuItem index="home">
             首页
           </ElMenuItem>
@@ -18,6 +27,7 @@
         </ElMain>
       </ElContainer>
     </ElContainer>
+    <ElButton v-show="!showNavigation" id="navBtn" @click="showNavigation = true" />
   </div>
 </template>
 
@@ -26,7 +36,14 @@ export default {
   name: "App",
   data: function() {
     return {
+      showNavigation: false
     }
+  },
+  computed: {
+  },
+  watch: {
+  },
+  mounted: function() {
   },
   methods: {
   }
@@ -41,5 +58,13 @@ export default {
   width: 100%;
   height: 100%;
   border: 1px solid #eee;
+}
+#navBtn {
+  width: 20px;
+  height: 20px;
+  background-color: blue;
+  position: fixed;
+	top: 0px;
+	z-index:9999;
 }
 </style>

@@ -78,11 +78,23 @@
           </ElFormItem>
         </div>
       </ElRow>
-      <ElFormItem>
-        <ElButton type="primary" native-type="submit" @click="submitForm('billForm')">
+      <ElFormItem class="submitWrapper">
+        <ElButton
+          id="submit"
+          size="mini"
+          class="formSubmit"
+          type="primary"
+          native-type="submit"
+          @click="submitForm('billForm')"
+        >
           提交
         </ElButton>
-        <ElButton @click="resetForm('billForm')">
+        <ElButton
+          id="reset"
+          class="formSubmit"
+          size="mini"
+          @click="resetForm('billForm')"
+        >
           重置
         </ElButton>
       </ElFormItem>
@@ -267,8 +279,24 @@ export default {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  /* justify-content: center; */
 }
 .formItem{
   width: 330px
+}
+.submitWrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+}
+.formSubmit {
+  width: 70px;
+}
+#submit {
+  margin-right: 10px;
+}
+#reset {
+  margin-left: 0px;
 }
 </style>

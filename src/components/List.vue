@@ -194,7 +194,6 @@ export default {
         page_num: pageNum,
         page_size: pageSize
       }
-      console.log(this.dateSection)
 
       $http.listBills(params).then(response => {
         if (response.data.code !== "0") {
