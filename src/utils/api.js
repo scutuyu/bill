@@ -32,7 +32,8 @@ class Api {
   }
 
   updateBill(params) {
-    return server.update(`${api}/${home}/bill`, params)
+    // return server.update(`${api}/${home}/bill`, params)
+    return server.put(`${api}/${home}/bill/${params.id}`, params)
   }
 
   deleteBill(id) {

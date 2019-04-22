@@ -122,7 +122,7 @@
       close-on-press-escape
     >
       <span>
-        确实要删除该账单吗？
+        确实要删除 【{{ deleteScope.row.bill_name }}】:【{{ deleteScope.row.pay_date }}】 【{{ deleteScope.row.price }}】 账单吗？
       </span>
       <div slot="footer" class="dialog-footer">
         <ElButton @click="dialogDeleteFormVisible = false">
@@ -230,17 +230,28 @@ export default {
       console.log('edit', _idx, this.editBillForm)
     },
     updateBill: function(val) {
-      console.log("hello", val)
-
+      val = this.filterFields({ ...val })
       $http.updateBill(val).then(res => {
         if (res.data.code !== '0') {
           this.$message.error(res.data.message)
         } else {
+          this.dialogEditFormVisible = false
           this.flush()
         }
       }).catch(err => {
         console.log('update bill ', err.message)
       })
+    },
+    filterFields: function({ id, bill_name, pay_date, pay_style_id, price, remark, type_id }) {
+      return {
+        id,
+        bill_name,
+        pay_date,
+        pay_style_id,
+        price,
+        remark,
+        type_id
+      }
     },
     handleDelete: function() {
       var _idx = this.deleteScope.$index

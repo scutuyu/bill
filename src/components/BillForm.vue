@@ -9,8 +9,8 @@
       label-position="left"
       @submit.native.prevent
     >
-      <ElRow class="test">
-        <div class="test1">
+      <ElRow class="wrapper">
+        <div class="formItem">
           <ElFormItem label="日期" prop="pay_date">
             <ElDatePicker
               v-model="billForm.pay_date"
@@ -21,7 +21,7 @@
             />
           </ElFormItem>
         </div>
-        <div class="test1">
+        <div class="formItem">
           <ElFormItem label="名称" prop="bill_name">
             <ElAutocomplete
               v-model="billForm.bill_name"
@@ -32,7 +32,7 @@
             />
           </ElFormItem>
         </div>
-        <div class="test1">
+        <div class="formItem">
           <ElFormItem label="账单类型" prop="type_id">
             <ElSelect v-model="billForm.type_id" automatic-dropdown>
               <ElOption
@@ -44,8 +44,8 @@
             </ElSelect>
           </ElFormItem>
         </div>
-        <div class="test1">
-          <ElCol class="test1">
+        <div class="formItem">
+          <ElCol class="formItem">
             <ElFormItem label="金额" prop="price">
               <ElInput
                 v-model="billForm.price"
@@ -55,7 +55,7 @@
             </ElFormItem>
           </ElCol>
         </div>
-        <div class="test1">
+        <div class="formItem">
           <ElFormItem label="支付方式" prop="pay_style_id">
             <ElSelect v-model="billForm.pay_style_id" automatic-dropdown>
               <ElOption
@@ -67,7 +67,7 @@
             </ElSelect>
           </ElFormItem>
         </div>
-        <div class="test1">
+        <div class="formItem">
           <ElFormItem label="备注" prop="remark">
             <ElInput
               v-model="billForm.remark"
@@ -263,12 +263,12 @@ export default {
 </script>
 
 <style>
-.test{
+.wrapper{
   width: 100%;
   display: flex;
   flex-wrap: wrap;
 }
-.test1{
+.formItem{
   width: 330px
 }
 </style>
