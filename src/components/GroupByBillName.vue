@@ -58,12 +58,12 @@ export default {
           {
             type: 'inside',
             start: 0,
-            end: 10
+            end: 100
           },
           {
             type: 'slider',
             start: 0,
-            end: 10
+            end: 100
           }
         ],
         xAxis: {
