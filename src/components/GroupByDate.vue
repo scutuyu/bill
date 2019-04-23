@@ -37,21 +37,25 @@ export default {
     },
     getOptionData: function() {
       const optionData = {
+        title: {
+          text: "根据时间（支付日期）统计",
+          x: "center"
+        },
         tooltip: {
           trigger: 'axis',
           position: function(pt) {
             return [pt[0], '10%']
           }
         },
-        toolbox: {
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
+        // toolbox: {
+        //   feature: {
+        //     dataZoom: {
+        //       yAxisIndex: 'none'
+        //     },
+        //     restore: {},
+        //     saveAsImage: {}
+        //   }
+        // },
         xAxis: {
           type: "category",
           boundaryGap: false,
@@ -115,6 +119,7 @@ export default {
         }
         this.chart.setOption(this.getOptionData())
       }).catch(err => {
+        this.$notify.error("根据支付时间查询失败!")
         console.log('group by date error:  ', err.message)
       })
     }

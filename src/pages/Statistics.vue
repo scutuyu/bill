@@ -4,10 +4,10 @@
       <ElMain>
         <ElRow>
           <ElCol>
-            <GroupByDate />
-            <GroupByBillName />
-            <GroupByBillType />
-            <PayStyle />
+            <GroupByDate class="chart" />
+            <GroupByBillName class="chart" />
+            <GroupByBillType class="chart" />
+            <PayStyle class="chart" />
           </ElCol>
         </ElRow>
       </ElMain>
@@ -31,4 +31,7 @@ export default {
 }
 </script>
 <style>
+.chart{
+  margin-bottom: 40px
+}
 </style>

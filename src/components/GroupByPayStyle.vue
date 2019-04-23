@@ -33,6 +33,10 @@ export default {
     },
     getOptionData: function() {
       const option = {
+        title: {
+          text: "根据支付类型统计",
+          x: "center"
+        },
         tooltip: {
           trigger: 'item',
           formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -96,6 +100,7 @@ export default {
         }
         this.chart.setOption(this.getOptionData())
       }).catch(err => {
+        this.$notify.error("根据支付类型查询失败!")
         console.log('group by date error:  ', err.message)
       })
     },

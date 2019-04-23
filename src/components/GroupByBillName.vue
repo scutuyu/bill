@@ -32,16 +32,20 @@ export default {
     },
     getOptionData: function() {
       const optionData = {
-        toolbox: {
-          feature: {
-            dataZoom: {
-              yAxisIndex: false
-            },
-            saveAsImage: {
-              pixelRatio: 2
-            }
-          }
+        title: {
+          text: "根据账单名称统计",
+          x: "center"
         },
+        // toolbox: {
+        //   feature: {
+        //     dataZoom: {
+        //       yAxisIndex: false
+        //     },
+        //     saveAsImage: {
+        //       pixelRatio: 2
+        //     }
+        //   }
+        // },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -123,6 +127,7 @@ export default {
         }
         this.chart.setOption(this.getOptionData())
       }).catch(err => {
+        this.$notify.error("根据账单名称查询失败!")
         console.log('group by date error:  ', err.message)
       })
     }

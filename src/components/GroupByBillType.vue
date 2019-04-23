@@ -33,6 +33,10 @@ export default {
     },
     getOptionData: function() {
       const option = {
+        title: {
+          text: "根据账单类型统计",
+          x: "center"
+        },
         tooltip: {
           trigger: 'item',
           formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -59,7 +63,7 @@ export default {
         ],
         series: [
           {
-            name: '支付类型',
+            name: '账单类型',
             type: 'pie',
             radius: '55%',
             center: ['40%', '50%'],
@@ -96,7 +100,8 @@ export default {
         }
         this.chart.setOption(this.getOptionData())
       }).catch(err => {
-        console.log('group by date error:  ', err.message)
+        this.$notify.error("根据账单类型查询失败!")
+        console.log('group by bill type error:  ', err.message)
       })
     },
     getSelectedLegends: function(legends, len) {
