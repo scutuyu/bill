@@ -5,9 +5,9 @@
       <ElTable
         id="list"
         :data="tableData"
-        border
         stripe
-        height="300"
+        align="center"
+        height="400px"
         show-summary
         :default-sort="{prop: 'date', order: 'descending'}"
       >
@@ -17,13 +17,11 @@
           type="index"
           :index="indexGenerator"
           label="序号"
-          fixed
           width="50"
         />
         <ElTableColumn
           header-align="center"
           align="center"
-          fixed
           sortable
           prop="pay_date"
           :formatter="payDateFormat"
@@ -90,16 +88,18 @@
         </ElTableColumn>
       </ElTable>
     </ElRow>
-    <ElPagination
-      id="billPage"
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :page-sizes="[10, 20, 30, 40, 50, 100, 1000, 10000]"
-      :page-size="10"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+    <ElRow id="pagination">
+      <ElPagination
+        id="billPage"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 30, 40, 50, 100, 1000, 10000]"
+        :page-size="10"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </ElRow>
     <ElDialog
       ref="dialogBillFormRef"
       title="编辑账单"
@@ -297,8 +297,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #billPage .el-input__inner{
   width: 80px !important;
+}
+#pagination{
+  display: flex;
+  justify-content: center
 }
 </style>

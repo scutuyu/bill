@@ -274,25 +274,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .wrapper{
-  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: center; */
 }
 .formItem{
   width: 330px
 }
 .submitWrapper {
-  /* width: 100%; */
   display: flex;
   flex-wrap: wrap;
-}
-@media screen and (min-width: 700px){
-  .submitWrapper {
-    justify-content: center;
-  }
 }
 .formSubmit {
   width: 70px;
@@ -302,5 +294,17 @@ export default {
 }
 #reset {
   margin-left: 0px;
+}
+@media screen and (min-width: 700px){
+  .submitWrapper {
+    justify-content: center;
+  }
+}
+@media screen and (min-width: 1375px){
+  .wrapper{
+      justify-content: flex-start;
+      padding-left: 15%;
+      padding-right: 10%;
+    }
 }
 </style>

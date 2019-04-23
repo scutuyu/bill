@@ -378,7 +378,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-col {
   border-radius: 4px;
 }

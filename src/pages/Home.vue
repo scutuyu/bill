@@ -1,6 +1,6 @@
 <template>
   <div class="page-home">
-    <AddBill @flushTable="flushTable" />
+    <AddBill id="addBill" @flushTable="flushTable" />
     <List ref="billList" />
   </div>
 </template>
@@ -67,6 +67,9 @@ export default {
 </script>
 
 <style lang="less">
+#addBill{
+  margin-bottom: 80px;
+}
 .page-home{
   .el-input {
     .el-input__inner{

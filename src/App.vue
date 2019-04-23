@@ -36,8 +36,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #navigation {
-  margin-bottom: 30px
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+@media screen and (max-width: 700px){
+  #navigation {
+  justify-content: flex-start;
+}
 }
 </style>
