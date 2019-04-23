@@ -50,7 +50,7 @@
     </div>
 
     <div class="customBtn">
-      <ElButton size="mini" @click="custom">
+      <ElButton size="mini" @click="customTimeOption = !customTimeOption">
         {{ customTimeOption ? '取消自定义' : '自定义' }}
       </ElButton>
       <ElButton size="mini" @click="queryBtn">
@@ -61,18 +61,6 @@
 </template>
 
 <script>
-const querySectionType = [
-  {
-    value: 0,
-    label: "年"
-  },
-  {
-    value: 1,
-    label: "月"
-  }
-]
-const defaultQuerySectionLabel = querySectionType[0].label
-const defaultQuerySectionValue = querySectionType[0].value
 const years = [
   {
     value: 0,
@@ -161,20 +149,14 @@ const months = [
     label: 12
   }
 ]
-const now = new Date().getFullYear()
-let defaultYear = {}
-for (var i = 0; i < years.length; i++) {
-  if (years[i].label === now) {
-    defaultYear = years[i]
-    break
-  }
-}
-const defaultQueryTimeLabel =
-  defaultQuerySectionValue === 0 ? defaultYear.label : months[0].label
-const defaultQueryTimeValue =
-  defaultQuerySectionValue === 0 ? defaultYear.value : months[0].value
 const customTimePickerOptions = {
   shourtcuts: [
+    {
+      text: "今天",
+      onClick(picker) {
+        picker.$emit('pick', new Date())
+      }
+    },
     {
       text: "最近一周",
       onClick(picker) {
@@ -242,20 +224,10 @@ export default {
       month: null,
       // 存储时间区间，用来向父组件传递
       dateSection: [],
-      // 查询区间类型，0-按年查，1-按月查
-      querySectionType,
       // 年份数组
       years,
       // 月份数组，固定12个月
       months,
-      // 默认按什么查（年)
-      querySectionLabel: defaultQuerySectionLabel,
-      // 默认查第几年
-      querySectionValue: defaultQuerySectionValue,
-      // 默认按年查，label值
-      queryTimeLabel: defaultQueryTimeLabel,
-      // 默认按
-      queryTimeValue: defaultQueryTimeValue,
       customTimeOption: false,
       customTimePickerOptions,
       customStartTime: null,
@@ -263,44 +235,58 @@ export default {
     }
   },
   watch: {
-    querySectionLabel: function(val) {
-      const section = this.get(val)
-      this.querySectionValue = section.value
-      // 0 表示年， 1 表示月
-      this.queryTimeLabel =
-        section.value === 0 ? this.getCurYear() : this.getCurMonth()
-      // this.queryTimeLabel = section.value + 1
-      if (this.customTimeOption) {
-        this.custom()
-      }
-    },
-    queryTimeLabel: function() {
-      if (this.customTimeOption) {
-        this.custom()
-      } else {
-        this.emitDateSection()
-      }
-    },
-    customStartTime: function() {
+    year: function(_val) {
       this.emitDateSection()
     },
-    customEndTime: function() {
+    month: function(_val) {
+      this.emitDateSection()
+    },
+    // querySectionLabel: function(val) {
+    //   const section = this.get(val)
+    //   this.querySectionValue = section.value
+    //   // 0 表示年， 1 表示月
+    //   this.queryTimeLabel =
+    //     section.value === 0 ? this.getCurYear() : this.getCurMonth()
+    //   // this.queryTimeLabel = section.value + 1
+    //   if (this.customTimeOption) {
+    //     this.custom()
+    //   }
+    // },
+    // queryTimeLabel: function() {
+    //   if (this.customTimeOption) {
+    //     this.custom()
+    //   } else {
+    //     this.emitDateSection()
+    //   }
+    // },
+    customTimeOption: function(_val) {
+      this.emitDateSection()
+    },
+    customStartTime: function(_val) {
+      this.emitDateSection()
+    },
+    customEndTime: function(_val) {
       this.emitDateSection()
     }
   },
   mounted: function() {
+    this.year = this.getCurYear()
+    this.month = this.getCurMonth()
+    const now = new Date()
+    this.customStartTime = new Date(this.year, this.month - 1, 1, 0, 0, 0)
+    this.customEndTime = new Date(this.year, this.month, now.getDate() + 1, 0, 0, 0)
     this.emitDateSection()
   },
   methods: {
-    get: function(label) {
-      const arr = this.querySectionType
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].label === label) {
-          return arr[i]
-        }
-      }
-      return null
-    },
+    // get: function(label) {
+    //   const arr = this.querySectionType
+    //   for (let i = 0; i < arr.length; i++) {
+    //     if (arr[i].label === label) {
+    //       return arr[i]
+    //     }
+    //   }
+    //   return null
+    // },
     getCurYear: function() {
       const now = new Date().getFullYear()
       return now
@@ -309,10 +295,10 @@ export default {
       const now = new Date().getMonth() + 1
       return now
     },
-    custom: function() {
-      this.customTimeOption = !this.customTimeOption
-      this.customTime = null
-    },
+    // custom: function() {
+    //   this.customTimeOption = !this.customTimeOption
+    //   this.customTime = null
+    // },
     // 获取本组件的时间区间
     getDateSection: function() {
       // 1. 判断组件是自定义方式获取时间区间还是选择的方式
@@ -326,24 +312,28 @@ export default {
         return [this.customStartTime, this.customEndTime]
       } else {
         // 3. 如果是选择的方式
-        const timePicker = this.queryTimeLabel
+        const year = this.year
+        if (!year) {
+          return null
+        }
         let start = null
         let end = null
         // 3. 如果是按年查询
-        if (this.querySectionLabel === '年') {
+        if (this.queryByYear) {
           // Date对象的构造函数可以有6个，年月日时分秒, 设置某年1月1日-某年12月31日
-          start = new Date(timePicker, 0, 1)
-          end = new Date(timePicker, 11, 31)
+          start = new Date(year, 0, 1)
+          end = new Date(year, 11, 31)
           console.log("按年的方式获取时间")
         } else {
+          const month = this.month
           // 4. 如果是按月查询
           const date = new Date()
           // 获取当年
           const year = date.getFullYear()
           // 为了取得某年某月有多少天，需要往Date的构造函数中传入month + 1 月，0日，即可得到上一个月的最后一天的日期，
           // 再调用getDate()即可
-          start = new Date(year, timePicker - 1, 1)
-          end = new Date(year, timePicker, 0, 0, 0, 0)
+          start = new Date(year, month - 1, 1)
+          end = new Date(year, month, 0, 0, 0, 0)
           console.log("按月的方式获取时间")
         }
         // 5. 返回时间区间
@@ -392,9 +382,6 @@ export default {
 .el-col {
   border-radius: 4px;
 }
-/* .customBtn{
-  text-align: right;
-} */
 .wrapper{
   display: flex;
   flex-wrap: wrap;
