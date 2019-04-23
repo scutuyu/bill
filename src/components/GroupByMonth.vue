@@ -2,7 +2,7 @@
   <div>
     <TimePicker @returnDateSection="setDateSection" @queryData="flush" />
     <ElRow type="flex" justify="center">
-      <div id="groupByDate" />
+      <div id="groupByMonth" />
     </ElRow>
   </div>
 </template>
@@ -12,7 +12,7 @@ import echarts from "echarts"
 import { formatDate } from "../utils/utils.js"
 import $http from "../utils/api.js"
 export default {
-  name: "GroupByDate",
+  name: "GroupByMonth",
   components: {},
   data() {
     return {
@@ -28,7 +28,7 @@ export default {
     }
   },
   mounted() {
-    this.init("groupByDate")
+    this.init("groupByMonth")
   },
   methods: {
     init: function(id) {
@@ -38,7 +38,7 @@ export default {
     getOptionData: function() {
       const optionData = {
         title: {
-          text: "根据时间（支付日期）按天统计",
+          text: "根据时间（支付日期）按月统计",
           x: "center"
         },
         tooltip: {
@@ -58,7 +58,7 @@ export default {
         // },
         xAxis: {
           type: "category",
-          boundaryGap: false,
+          boundaryGap: true,
           data: this.xAxis
         },
         yAxis: {
@@ -94,7 +94,8 @@ export default {
             itemStyle: {
               color: 'rgb(10, 191, 83)'
             },
-            type: "line"
+            type: "bar",
+            barMaxWidth: 25
           }
         ]
       }
@@ -110,7 +111,7 @@ export default {
         end_date: formatDate(this.dateSection[1])
       }
       console.log('flush group by date', params)
-      $http.groupByDate(params).then(res => {
+      $http.groupByMonth(params).then(res => {
         if (res.data.code !== "0") {
           this.$notify.error(res.data.message)
         } else {
@@ -119,8 +120,8 @@ export default {
         }
         this.chart.setOption(this.getOptionData())
       }).catch(err => {
-        this.$notify.error("根据支付时间（按天统计）查询失败!")
-        console.log('group by date error:  ', err.message)
+        this.$notify.error("根据支付时间（按月统计）查询失败!")
+        console.log('group by month error:  ', err.message)
       })
     }
   }
@@ -128,7 +129,7 @@ export default {
 </script>
 
 <style scoped>
-#groupByDate {
+#groupByMonth {
   width: 600px;
   height: 400px;
 }

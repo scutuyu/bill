@@ -57,6 +57,12 @@ class Api {
     })
   }
 
+  groupByMonth(params) {
+    return server.get(`${api}/${statistics}/group_by_month`, {
+      params
+    })
+  }
+
   groupByBillName(params) {
     return server.get(`${api}/${statistics}/group_by_bill_name`, {
       params
