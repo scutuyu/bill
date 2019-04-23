@@ -327,9 +327,6 @@ export default {
         } else {
           const month = this.month
           // 4. 如果是按月查询
-          const date = new Date()
-          // 获取当年
-          const year = date.getFullYear()
           // 为了取得某年某月有多少天，需要往Date的构造函数中传入month + 1 月，0日，即可得到上一个月的最后一天的日期，
           // 再调用getDate()即可
           start = new Date(year, month - 1, 1)

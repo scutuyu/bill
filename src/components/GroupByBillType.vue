@@ -101,7 +101,7 @@ export default {
         this.chart.setOption(this.getOptionData())
       }).catch(err => {
         this.$notify.error("根据账单类型查询失败!")
-        console.log('group by bill type error:  ', err.message)
+        console.log('group by bill type error:  ', err.message, err)
       })
     },
     getSelectedLegends: function(legends, len) {
@@ -109,6 +109,7 @@ export default {
       for (var i = 0; i < len; i++) {
         result[i] = i < len
       }
+      return result
     }
   }
 }
