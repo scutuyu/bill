@@ -21,7 +21,7 @@ server.interceptors.response.use(function(response) {
   return Promise.reject(error)
 })
 
-const api = 'http://localhost:8082/bill'
+const api = 'http://10.10.70.194:8082/bill'
 const home = 'home'
 const statistics = 'statistics'
 const common = 'common'

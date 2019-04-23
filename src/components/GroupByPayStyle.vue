@@ -88,7 +88,7 @@ export default {
       console.log('flush group by date', params)
       $http.groupByBillPayStyle(params).then(res => {
         if (res.data.code !== "0") {
-          this.$message.error(res.data.message)
+          this.$notify.error(res.data.message)
         } else {
           this.legendData = res.data.data.legend_data
           this.seriesData = res.data.data.series_data

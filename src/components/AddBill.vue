@@ -18,13 +18,13 @@ export default {
     submitMethod: function(val) {
       $http.addBill(val).then(res => {
         if (res.data.code === '0') {
-          this.$message.success('新增成功!')
+          this.$notify.success('新增成功!')
           // this.resetForm('billForm')
           this.$refs.billForm.resetForm('billForm')
           // 新增成功后，调用父组件的刷新列表方法
           this.$emit('flushTable', '')
         } else {
-          this.$message.error(res.data.message)
+          this.$notify.error(res.data.message)
         }
       }).catch(err => {
         console.log('add bill fail ', err.message)

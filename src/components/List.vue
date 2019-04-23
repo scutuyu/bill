@@ -189,6 +189,10 @@ export default {
       pageNum = pageNum || 1
       const pageSize = this.$store.state.pageSize
       console.log('from list:....', this.dateSection)
+      if (!this.dateSection) {
+        this.$notify.error("请输入查询时间区间")
+        return
+      }
       const params = {
         start_date: formatDate(this.dateSection[0]),
         end_date: formatDate(this.dateSection[1]),
@@ -198,7 +202,7 @@ export default {
 
       $http.listBills(params).then(response => {
         if (response.data.code !== "0") {
-          this.$message.error(response.data.message)
+          this.$notify.error(response.data.message)
         } else {
           this.$store.commit("updateBills", response.data.data.list)
           this.$store.commit("updateTotal", response.data.data.total)
@@ -233,7 +237,7 @@ export default {
       val = this.filterFields({ ...val })
       $http.updateBill(val).then(res => {
         if (res.data.code !== '0') {
-          this.$message.error(res.data.message)
+          this.$notify.error(res.data.message)
         } else {
           this.dialogEditFormVisible = false
           this.flush()
@@ -260,7 +264,7 @@ export default {
       console.log('delete', _idx, _row)
       $http.deleteBill(_row.id).then(response => {
         if (response.data.code !== '0') {
-          this.$message.error(response.data.message)
+          this.$notify.error(response.data.message)
         } else {
           this.flush()
         }
@@ -272,6 +276,8 @@ export default {
       return idx + 1
     },
     setDateSection: function(val) {
+      console.log("list set date section: ", val)
+
       this.dateSection = val
     },
     handleCurrentChange: function(val) {

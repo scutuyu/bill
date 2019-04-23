@@ -1,52 +1,38 @@
 <template>
   <div class="wrapper">
-    <ElSelect v-if="!customTimeOption" v-model="querySectionLabel" size="mini">
-      <ElOption
-        v-for="item in querySectionType"
-        :key="item.value"
-        :label="item.label"
-        :value="item.label"
+    <div v-if="!customTimeOption">
+      <ElSwitch
+        v-model="queryByYear"
+        active-text="按年查询"
+        inactive-text="按月查询"
       />
-    </ElSelect>
-
-    <ElSelect v-if="!customTimeOption" v-model="queryTimeLabel" size="mini">
-      <div v-if="querySectionValue === 0">
+      <ElSelect v-model="year" v-scroll="handleScroll" size="mini">
         <ElOption
           v-for="item in years"
           :key="item.value"
           :label="item.label"
           :value="item.label"
         />
-      </div>
-      <div v-if="querySectionValue === 1">
+      </ElSelect>
+
+      <ElSelect
+        v-if="!queryByYear"
+        v-model="month"
+        size="mini"
+      >
         <ElOption
           v-for="item in months"
           :key="item.value"
           :label="item.label"
           :value="item.label"
         />
-      </div>
-    </ElSelect>
-
-    <div class="customBtn">
-      <ElButton size="mini" @click="custom">
-        {{ customTimeOption ? '选择' : '自定义' }}
-      </ElButton>
+      </ElSelect>
     </div>
 
     <div v-if="customTimeOption">
-      <!-- <ElDatePicker
-        v-model="customTime"
-        size="mini"
-        type="datetimerange"
-        :picker-options="customTimePickerOptions"
-        range-separator="至"
-        start-placeholde="开始日期"
-        end-placeholde="结束日期"
-        align="right"
-      /> -->
       <ElDatePicker
         v-model="customStartTime"
+        size="mini"
         type="datetime"
         placeholder="选择开始日期时间"
         align="right"
@@ -55,15 +41,22 @@
       -
       <ElDatePicker
         v-model="customEndTime"
+        size="mini"
         type="datetime"
         placeholder="选择结束日期时间"
         align="right"
         :picker-options="customTimePickerOptions"
       />
     </div>
-    <ElButton size="mini" @click="queryBtn">
-      查询
-    </ElButton>
+
+    <div class="customBtn">
+      <ElButton size="mini" @click="custom">
+        {{ customTimeOption ? '取消自定义' : '自定义' }}
+      </ElButton>
+      <ElButton size="mini" @click="queryBtn">
+        查询
+      </ElButton>
+    </div>
   </div>
 </template>
 
@@ -92,6 +85,30 @@ const years = [
   {
     value: 2,
     label: 2020
+  },
+  {
+    value: 3,
+    label: 2021
+  },
+  {
+    value: 4,
+    label: 2022
+  },
+  {
+    value: 5,
+    label: 2023
+  },
+  {
+    value: 6,
+    label: 2024
+  },
+  {
+    value: 7,
+    label: 2025
+  },
+  {
+    value: 8,
+    label: 2026
   }
 ]
 const months = [
@@ -191,18 +208,55 @@ const customTimePickerOptions = {
   ]
 }
 export default {
+  directives: {
+    scroll: {
+      bind(el, binding) {
+      // 获取滚动页面DOM
+        const SCROLL_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+        let scrollPosition = 0
+
+        SCROLL_DOM.addEventListener('scroll', function() {
+          // 当前的滚动位置 减去  上一次的滚动位置
+          // 如果为true则代表向上滚动，false代表向下滚动
+          const flagToDirection = this.scrollTop - scrollPosition > 0
+          // 记录当前的滚动位置
+          scrollPosition = this.scrollTop
+          const LIMIT_BOTTOM = 100
+          // 记录滚动位置距离底部的位置
+          // console.log("this.scrollTop", this.scrollTop, "this.scrollHeight", this.scrollHeight, "this.clientHeight", this.clientHeight)
+
+          const scrollBottom = this.scrollHeight - (this.scrollTop + this.clientHeight) < LIMIT_BOTTOM
+          // 如果已达到指定位置则触发
+          if (scrollBottom) {
+          // 将滚动行为告诉组件
+            binding.value(flagToDirection)
+          }
+        })
+      }
+    }
+  },
   data() {
     return {
+      queryByYear: true,
+      year: null,
+      month: null,
+      // 存储时间区间，用来向父组件传递
       dateSection: [],
+      // 查询区间类型，0-按年查，1-按月查
       querySectionType,
+      // 年份数组
       years,
+      // 月份数组，固定12个月
       months,
+      // 默认按什么查（年)
       querySectionLabel: defaultQuerySectionLabel,
+      // 默认查第几年
       querySectionValue: defaultQuerySectionValue,
+      // 默认按年查，label值
       queryTimeLabel: defaultQueryTimeLabel,
+      // 默认按
       queryTimeValue: defaultQueryTimeValue,
       customTimeOption: false,
-      customTime: "",
       customTimePickerOptions,
       customStartTime: null,
       customEndTime: null
@@ -227,7 +281,10 @@ export default {
         this.emitDateSection()
       }
     },
-    customTime: function() {
+    customStartTime: function() {
+      this.emitDateSection()
+    },
+    customEndTime: function() {
       this.emitDateSection()
     }
   },
@@ -247,24 +304,10 @@ export default {
     getCurYear: function() {
       const now = new Date().getFullYear()
       return now
-      // const ys = this.years
-      // for (let i = 0; i < ys.length; i++) {
-      //   if (ys[i].label === now) {
-      //     return ys[i].value
-      //   }
-      // }
-      // return null
     },
     getCurMonth: function() {
-      // const ms = this.months
       const now = new Date().getMonth() + 1
       return now
-      // for (let i = 0; i < ms.length; i++) {
-      //   if (ms[i].label === now) {
-      //     return ms[i].value
-      //   }
-      // }
-      // return null
     },
     custom: function() {
       this.customTimeOption = !this.customTimeOption
@@ -276,8 +319,11 @@ export default {
       if (this.customTimeOption) {
         // 2. 如果是自定义获取时间的的方式
         console.log("自定义方式获取时间")
-
-        return this.customTime
+        // 只有开始时间和结束时间都设置好了，才能往父组件传递
+        if (!this.customStartTime || !this.customEndTime) {
+          return null
+        }
+        return [this.customStartTime, this.customEndTime]
       } else {
         // 3. 如果是选择的方式
         const timePicker = this.queryTimeLabel
@@ -309,14 +355,34 @@ export default {
       // 1. 先获取本组件中的时间区间
       this.dateSection = this.getDateSection()
       console.log("时间组件向父组件发送时间区间", this.dateSection)
-
-      // 2. 如果时间区间不为空，就发送
-      if (this.dateSection) {
-        this.$emit('returnDateSection', this.dateSection)
-      }
+      this.$emit('returnDateSection', this.dateSection)
     },
     queryBtn: function() {
       this.$emit('queryData')
+    },
+    monthChange: function(_v) {
+      console.log("month change ", _v)
+    },
+    handleScroll: function(param) {
+      if (param) {
+        console.log("loading years...", param)
+
+        // 请求下一页的数据
+        this.years.push(...this.generateYear(years[years.length - 1])) // 11
+      }
+    },
+    generateYear: function(val) {
+      const arr = []
+      const len = 10
+      let value = val.value
+      let label = val.label
+      for (let i = 0; i < len; i++) {
+        arr.push({
+          value: ++value,
+          label: ++label
+        })
+      }
+      return arr
     }
   }
 }
@@ -326,11 +392,17 @@ export default {
 .el-col {
   border-radius: 4px;
 }
-.customBtn{
+/* .customBtn{
   text-align: right;
-}
+} */
 .wrapper{
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+}
+@media screen and (max-width: 700px)  {
+  .wrapper{
+  justify-content: flex-start;
+}
 }
 </style>

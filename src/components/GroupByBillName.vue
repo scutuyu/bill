@@ -116,7 +116,7 @@ export default {
       console.log('flush group by date', params)
       $http.groupByBillName(params).then(res => {
         if (res.data.code !== "0") {
-          this.$message.error(res.data.message)
+          this.$notify.error(res.data.message)
         } else {
           this.xAxis = res.data.data.x_axis
           this.yAxis = res.data.data.y_axis
