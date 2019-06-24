@@ -39,6 +39,7 @@
         <ElTableColumn
           header-align="center"
           align="center"
+          sortable
           prop="price"
           label="金额"
           width="90"
@@ -46,6 +47,7 @@
         <ElTableColumn
           header-align="center"
           align="center"
+          sortable
           prop="pay_style"
           label="支付方式"
           width="90"
@@ -53,6 +55,7 @@
         <ElTableColumn
           header-align="center"
           align="center"
+          sortable
           prop="bill_type"
           label="账单类型"
           width="90"
@@ -67,6 +70,7 @@
         <ElTableColumn
           header-align="center"
           align="center"
+          sortable
           prop="create_time"
           label="添加时间"
           width="180"

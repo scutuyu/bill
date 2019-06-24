@@ -235,6 +235,9 @@ export default {
     }
   },
   watch: {
+    queryByYear: function(_val) {
+      this.emitDateSection()
+    },
     year: function(_val) {
       this.emitDateSection()
     },
@@ -319,6 +322,7 @@ export default {
         let start = null
         let end = null
         // 3. 如果是按年查询
+        console.log("this.queryByYear", this.queryByYear)
         if (this.queryByYear) {
           // Date对象的构造函数可以有6个，年月日时分秒, 设置某年1月1日-某年12月31日
           start = new Date(year, 0, 1)
