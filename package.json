@@ -20,7 +20,7 @@
     "@vue/cli-plugin-babel": "^3.2.0",
     "@vue/cli-plugin-eslint": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
-    "ajv": "^6.7.0",
+    "ajv": "^6.12.3",
     "babel-eslint": "^10.0.1",
     "conventional-changelog": "^3.0.5",
     "cz-conventional-changelog": "^2.1.0",
